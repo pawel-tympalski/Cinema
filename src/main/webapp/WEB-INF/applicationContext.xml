@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	
+	<security:http auto-config="true">
+<security:intercept-url pattern="/form123" access="hasRole('ROLE_ADMIN')" />
+<security:intercept-url pattern="/getreserves" access="hasRole('ROLE_ADMIN')" />
+
+
+<!-- opcja z tokenem w bazie danych  <security:remember-me key="myAppKey"  data-source-ref="dataSource"/> -->
+
+<security:csrf disabled="true"/>
+ <security:remember-me key="myAppKey" /> 
+</security:http>
+
+
+
+<security:authentication-manager>
+<security:authentication-provider>
+<security:user-service>
+<security:user authorities="ROLE_ADMIN" name="admin"
+password="admin" />
+</security:user-service>
+</security:authentication-provider>
+</security:authentication-manager>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/Cinema"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="gRondes"></property>
+	</bean>
+
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.cinema.comet.domain" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+			</props>
+		</property>
+	</bean>
+
+	
+
+</beans>
